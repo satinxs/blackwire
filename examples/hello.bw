@@ -1,0 +1,17 @@
+:main
+  load 72
+  printc
+  load 101
+  printc
+  load 108
+  load 108
+  printc
+  printc
+  load 111
+  printc
+  load 33
+  printc
+  load 10
+  printc
+:end
+stop

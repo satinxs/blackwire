@@ -1,0 +1,34 @@
+:main
+# Numbers bigger than 46 will result in integer overflow.
+  load 78
+  printc
+  load 58
+  printc
+  load 32
+  printc
+
+:fib
+  load 1
+  peek 0
+  pop 1
+  readi
+  pop 3
+  decr 3
+:fibloop
+
+  push 0
+  push 1
+  add
+  push 1
+  pop 0
+  pop 1
+  decr 3
+  push 3
+  jumpt fibloop
+  push 0
+  printi
+  load 10
+  printc
+  
+:end
+  stop
