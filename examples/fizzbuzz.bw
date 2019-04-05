@@ -1,6 +1,8 @@
 :main
+clock
+pop 8
 
-:loop #Can i use comments here?
+:loop
 	push 0
 	load 3
 	mod
@@ -51,4 +53,9 @@
 :none
 
 :end
+clock
+push 8
+sub
+printi
+
 stop

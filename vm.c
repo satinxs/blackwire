@@ -1,8 +1,10 @@
+#include "vm.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "vm.h"
+#include <time.h>
 
-static void dump(BlackProgram *p) {
+static void dump(BlackProgram* p)
+{
     int i = 0;
     printf("   Registers:\n");
     printf("   %d %d %d\n", p->reg[0], p->reg[1], p->reg[2]);
@@ -10,13 +12,15 @@ static void dump(BlackProgram *p) {
     printf("   %d %d %d\n", p->reg[6], p->reg[7], p->reg[8]);
     printf("   Stack: [");
     i = p->sp;
-    while (i > -1) printf("%d, ", p->stack[i--]);
+    while (i > -1)
+        printf("%d, ", p->stack[i--]);
     printf("]\n");
 
     printf("ip=%d, sp=%d\n", p->ip, p->sp);
 }
 
-static void vm_error(int code, int extra, BlackProgram *p) {
+static void vm_error(int code, int extra, BlackProgram* p)
+{
     switch (code) {
     case ER_DUMP:
         printf("Dumping:\n");
@@ -38,7 +42,8 @@ static void vm_error(int code, int extra, BlackProgram *p) {
     dump(p);
 }
 
-static inline int pop(BlackProgram *p) {
+static inline int pop(BlackProgram* p)
+{
     if (p->sp < 0) {
         vm_error(STACK_EMPTY, 0, p);
         exit(-1);
@@ -46,7 +51,8 @@ static inline int pop(BlackProgram *p) {
     return p->stack[p->sp--];
 }
 
-static inline void push(BlackProgram *p, int n) {
+static inline void push(BlackProgram* p, int n)
+{
     if (p->sp == MAXSTACK - 1) {
         vm_error(STACK_FULL, 0, p);
         exit(-1);
@@ -54,9 +60,10 @@ static inline void push(BlackProgram *p, int n) {
     p->stack[++p->sp] = n;
 }
 
-extern int black_Step(BlackProgram *p) {
+extern int black_Step(BlackProgram* p)
+{
     int tmp;
-    Instruction *op;
+    Instruction* op;
     if (p->running && p->ip < p->length && p->ip > -1) {
         op = &p->prog[p->ip];
         p->ip++;
@@ -132,10 +139,12 @@ extern int black_Step(BlackProgram *p) {
             p->ip = op->data;
             break;
         case JUMPF:
-            if (pop(p) <= 0) p->ip = op->data;
+            if (pop(p) <= 0)
+                p->ip = op->data;
             break;
         case JUMPT:
-            if (pop(p) > 0) p->ip = op->data;
+            if (pop(p) > 0)
+                p->ip = op->data;
             break;
 
         //Basic IO
@@ -165,28 +174,39 @@ extern int black_Step(BlackProgram *p) {
         case DUMP:
             vm_error(ER_DUMP, op->op, p);
             break;
+        case CLOCK: {
+            clock_t c = clock();
+            int r = (int)((double)c / (double)CLOCKS_PER_SEC * 1000);
+            printf("%d <- clock\n", r);
+            push(p, r);
+            break;
+        }
         default:
             p->running = 0;
             vm_error(UNKNOWN_OPCODE, op->op, p);
             return -1;
         }
 
-    } else p->running = 0;
+    } else
+        p->running = 0;
     return 1;
 }
 
-extern void black_Dump(BlackProgram *p) {
+extern void black_Dump(BlackProgram* p)
+{
     dump(p);
 }
 
-extern int black_Run(BlackProgram *p) {
+extern int black_Run(BlackProgram* p)
+{
     int r = 0;
     while (p->running)
         r = black_Step(p);
     return r;
 }
 
-extern void black_Destroy(BlackProgram *p) {
-	free(p->prog);
-	free(p);
+extern void black_Destroy(BlackProgram* p)
+{
+    free(p->prog);
+    free(p);
 }

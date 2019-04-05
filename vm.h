@@ -38,6 +38,7 @@ enum {
     LOAD, POP, PUSH, PEEK,
     PRINTI, PRINTC, READI, READC,
     DUMP, STOP, NOP,
+    CLOCK
 };
 
 extern void black_Destroy(BlackProgram *p);

@@ -14,8 +14,10 @@
   readi
   pop 3
   decr 3
-:fibloop
+  clock
+  pop 7
 
+:fibloop
   push 0
   push 1
   add
@@ -25,10 +27,19 @@
   decr 3
   push 3
   jumpt fibloop
+
+  push 7
+  clock
+  sub
+  printi
+  load 10
+  printc
+
   push 0
   printi
   load 10
   printc
-  
+
+
 :end
   stop
